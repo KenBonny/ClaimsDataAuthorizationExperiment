@@ -1,0 +1,24 @@
+﻿@using KenBonny.ClaimsExperiment.Models.PropertyViewModels
+@model AvailableProperty
+
+@{
+    ViewBag.Title = "Houses Overview";
+    Layout = "_Layout";
+}
+
+<h2>Houses Overview</h2>
+<h3>Properties I can buy:</h3>
+<ul>
+@foreach (var property in Model.CanBuy)
+{
+    <li>@property.Description</li>
+}
+</ul>
+
+<h3>Properties I can sell:</h3>
+<ul>
+    @foreach (var property in Model.CanSell)
+    {
+        <li>@property.Description</li>
+    }
+</ul>
