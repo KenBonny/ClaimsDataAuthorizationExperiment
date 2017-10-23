@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -456,5 +458,56 @@ namespace KenBonny.ClaimsExperiment.Controllers
         }
 
         #endregion
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ToggleAccessProperty()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var accessProperty = new Claim("AccessProperty", "");
+
+            if (User.HasClaim("AccessProperty", ""))
+            {
+                await _userManager.RemoveClaimAsync(user, accessProperty);
+            }
+            else
+            {
+                await _userManager.AddClaimAsync(user, accessProperty);
+            }
+            await _signInManager.RefreshSignInAsync(user);
+
+            return RedirectToAction("Index", "Property");
+        }
+
+        [HttpGet]
+        public IActionResult Claims()
+        {
+            return View(User.Claims);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveClaim(string type, string value)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var claim = new Claim(type, value ?? string.Empty);
+
+            await _userManager.RemoveClaimAsync(user, claim);
+            await _signInManager.RefreshSignInAsync(user);
+
+            return RedirectToAction("Claims");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddClaim(string type, string value)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var claim = new Claim(type, value ?? String.Empty);
+
+            await _userManager.AddClaimAsync(user, claim);
+            await _signInManager.RefreshSignInAsync(user);
+
+            return RedirectToAction("Claims");
+        }
     }
 }

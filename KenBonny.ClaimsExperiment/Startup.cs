@@ -63,6 +63,9 @@ namespace KenBonny.ClaimsExperiment
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
+            services.AddAuthorization(config =>
+                config.AddPolicy("Property", policy => policy.RequireClaim("AccessProperty")));
+
             services.AddMvc();
         }
 

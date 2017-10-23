@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KenBonny.ClaimsExperiment.Controllers
 {
-    [Authorize(Roles = "TestPolicy")]
+    [Authorize("Property")]
     public class PropertyController : Controller
     {
         private List<Property> _properties;

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<System.Security.Claims.Claim>
+
+@{
+    ViewBag.Title = "Claims";
+    Layout = "_Layout";
+}
+
+<h2>Claims on user "@User.Identity.Name"</h2>
+
+<form asp-action="AddClaim" method="post">
+    <input type="text" id="type" name="type" placeholder="Type"/>
+    <input type="text" id="value" name="value" placeholder="Value"/>
+    <input type="submit"/>
+</form>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Value</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr>
+                <td>@claim.Type</td>
+                <td>@claim.Value</td>
+                <td><a href="/Account/RemoveClaim?type=@claim.Type&value=@claim.Value">Remove</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
