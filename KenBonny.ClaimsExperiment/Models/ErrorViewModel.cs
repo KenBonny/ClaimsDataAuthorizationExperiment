@@ -1,5 +1,3 @@
-using System;
-
 namespace KenBonny.ClaimsExperiment.Models
 {
     public class ErrorViewModel
