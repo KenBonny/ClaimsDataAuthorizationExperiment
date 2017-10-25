@@ -11,7 +11,7 @@
 <ul>
 @foreach (var property in Model.CanBuy)
 {
-    <li>@property.Description</li>
+    <li>@property.Id - @property.Description</li>
 }
 </ul>
 
@@ -19,6 +19,6 @@
 <ul>
     @foreach (var property in Model.CanSell)
     {
-        <li>@property.Description</li>
+        <li>@property.Id - @property.Description</li>
     }
 </ul>

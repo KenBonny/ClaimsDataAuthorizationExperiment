@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using KenBonny.ClaimsExperiment.Models;
 using KenBonny.ClaimsExperiment.Models.PropertyViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KenBonny.ClaimsExperiment.Controllers
@@ -9,9 +12,11 @@ namespace KenBonny.ClaimsExperiment.Controllers
     public class PropertyController : Controller
     {
         private List<Property> _properties;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PropertyController()
+        public PropertyController(UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _properties = new List<Property>
             {
                 new Property(1, "Beautifull house in the country"),
@@ -27,8 +32,8 @@ namespace KenBonny.ClaimsExperiment.Controllers
         {
             var availableProperty = new AvailableProperty
             {
-                CanBuy = _properties,
-                CanSell = _properties
+                CanBuy = _properties.Where(User.CanBuyProperty),
+                CanSell = _properties.Where(User.CanSellProperty)
             };
             return View(availableProperty);
         }
