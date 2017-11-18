@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Claims;
+using System.Security.Principal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using KenBonny.ClaimsExperiment.Data;
 using KenBonny.ClaimsExperiment.Models;
 using KenBonny.ClaimsExperiment.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace KenBonny.ClaimsExperiment
 {
@@ -48,6 +51,11 @@ namespace KenBonny.ClaimsExperiment
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
+
+            // allow the user to be injected
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<ClaimsPrincipal>(
+                provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
 
             services.ConfigureApplicationCookie(options =>
             {
