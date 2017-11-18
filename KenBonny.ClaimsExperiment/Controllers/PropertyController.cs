@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using KenBonny.ClaimsExperiment.Models;
 using KenBonny.ClaimsExperiment.Models.PropertyViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -11,12 +13,12 @@ namespace KenBonny.ClaimsExperiment.Controllers
     [Authorize("Property")]
     public class PropertyController : Controller
     {
+        private readonly ClaimsPrincipal _injectedUser;
         private List<Property> _properties;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PropertyController(UserManager<ApplicationUser> userManager)
+        public PropertyController(ClaimsPrincipal user)
         {
-            _userManager = userManager;
+            _injectedUser = user;
             _properties = new List<Property>
             {
                 new Property(1, "Beautifull house in the country"),
@@ -32,8 +34,10 @@ namespace KenBonny.ClaimsExperiment.Controllers
         {
             var availableProperty = new AvailableProperty
             {
+                // User property can check relevant claims
                 CanBuy = _properties.Where(User.CanBuyProperty),
-                CanSell = _properties.Where(User.CanSellProperty)
+                // threads current principal can also check the relevant claims
+                CanSell = _properties.Where(_injectedUser.CanSellProperty)
             };
             return View(availableProperty);
         }
